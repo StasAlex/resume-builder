@@ -1,101 +1,216 @@
-import Image from "next/image";
+import {
+  FaUser,
+  FaLaptopCode,
+  FaSuitcase,
+  FaGraduationCap,
+  FaInfoCircle,
+  FaBullseye,
+  FaGlobe,
+  FaBriefcase,
+} from "react-icons/fa";
 
-export default function Home() {
+export default function Resume() {
+  const personalInfo = [
+    { label: "Email", value: "stanislav@example.com" },
+    { label: "Phone", value: "+380 67 123 4567" },
+    { label: "Location", value: "Ukraine, Kharkiv" },
+    { label: "Languages", value: "Ukrainian (Native), English (Intermediate)" },
+  ];
+
+  const technicalSkills = [
+    "HTML, CSS, JavaScript, React, VueJS",
+    "Magento 2, Shopify, WordPress",
+    "Responsive Layout, Accessibility",
+    "Git, SCSS, TailwindCSS",
+  ];
+
+  const projects = {
+    Magento: [
+      {
+        name: "Nuko E-Supermarket",
+        description: [
+          "Developed Magento 2 customizations, breadcrumbs, and advanced menus.",
+          "Implemented a PWA-like mobile layout for improved responsiveness.",
+        ],
+        duration: "5 months",
+      },
+      {
+        name: "SFERA",
+        description: [
+          "Performed frontend development and bug fixes for a Magento 2 store.",
+          "Enhanced user experience through UI improvements.",
+        ],
+        duration: "3 months",
+      },
+    ],
+    Shopify: [
+      {
+        name: "Swimwear World",
+        description: [
+          "Customized Shopify themes and optimized frontend layouts.",
+          "Integrated Liquid templates for dynamic product displays.",
+        ],
+        duration: "3 months",
+      },
+      {
+        name: "Modern Style",
+        description: [
+          "Built custom Shopify theme for a fashion store.",
+          "Integrated advanced cart functionality and responsive designs.",
+        ],
+        duration: "4 months",
+      },
+    ],
+    WordPress: [
+      {
+        name: "Creative Agency Site",
+        description: [
+          "Developed a WordPress site using Elementor for a design agency.",
+          "Implemented SEO optimization and enhanced page speed.",
+        ],
+        duration: "2 months",
+      },
+      {
+        name: "Health Blog",
+        description: [
+          "Customized WordPress theme and integrated plugins for blogging functionality.",
+          "Added multilingual support using WPML.",
+        ],
+        duration: "3 months",
+      },
+    ],
+    NextJS: [
+      {
+        name: "Portfolio Builder",
+        description: [
+          "Developed a portfolio website using Next.js and TailwindCSS.",
+          "Optimized performance and implemented image handling with Next/Image.",
+        ],
+        duration: "2 months",
+      },
+      {
+        name: "Learning Hub",
+        description: [
+          "Built an e-learning platform with reusable Next.js components.",
+          "Implemented user authentication with NextAuth.",
+        ],
+        duration: "6 months",
+      },
+    ],
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      <div className="min-h-screen bg-white text-textPrimary p-8">
+        <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 rounded-lg">
+          {/* Left Section */}
+          <div className="bg-white text-background border shadow-lg p-8 rounded-[50px] mt-[80px] -mr-[80px] z-10 h-full">
+            <div className="flex gap-4 text-5xl justify-end">
+              <FaGlobe />
+              <FaBriefcase/>
+            </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {/* Personal Info */}
+            <div className="bg-background rounded-lg shadow-md p-6 mt-8">
+              <h2 className="text-xl font-heading font-bold flex items-center">
+                <FaInfoCircle className="mr-2 text-accent" />
+                Personal Info
+              </h2>
+              <ul className="mt-4 space-y-2">
+                {personalInfo.map((info, index) => (
+                    <li key={index} className="text-sm text-textSecondary">
+                      <strong>{info.label}: </strong>
+                      {info.value}
+                    </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Career Objective */}
+            <div className="bg-background rounded-lg shadow-md p-6 mt-6">
+              <h2 className="text-xl font-heading font-bold flex items-center">
+                <FaBullseye className="mr-2 text-accent" />
+                Career Objective
+              </h2>
+              <p className="text-sm mt-2 text-textSecondary">
+                Active and communicative <strong>Frontend Developer</strong> with
+                <strong> 4 years</strong> of experience, specializing in
+                <strong> Magento 2, Shopify, WordPress, and NextJS</strong>.
+                Focused on delivering high-quality, pixel-perfect web solutions.
+              </p>
+            </div>
+
+            {/* Technical Skills */}
+            <div className="bg-background rounded-lg shadow-md p-6 mt-6">
+              <h2 className="text-xl font-heading font-bold flex items-center">
+                <FaLaptopCode className="mr-2 text-secondaryAccent" />
+                Technical Skills
+              </h2>
+              <ul className="list-disc list-inside text-sm mt-2 text-textSecondary">
+                {technicalSkills.map((skill, index) => (
+                    <li key={index}>{skill}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Education */}
+            <div className="bg-background rounded-lg shadow-md p-6 mt-6">
+              <h2 className="text-xl font-heading font-bold flex items-center">
+                <FaGraduationCap className="mr-2 text-accent" />
+                Education
+              </h2>
+              <p className="text-sm mt-2 text-textSecondary">
+                KHARKIV NATIONAL UNIVERSITY OF RADIO ELECTRONICS<br />
+                Honors degree in “Data Security in Telecommunication Systems,”
+                2001
+              </p>
+            </div>
+          </div>
+
+          {/* Right Section */}
+          <div className="col-span-2 bg-cardBackground p-8 rounded-[50px] pl-[80px] pt-[80px]">
+            <h1 className="text-4xl font-heading font-bold flex items-center justify-end">
+              <FaUser className="mr-2 text-accent"/>
+              Stanislav Aleksandronets
+            </h1>
+            <p className="text-lg my-6 text-textSecondary flex justify-start">
+              <span className="border-white border rounded-[50px] py-4 px-8 text-2xl">Ecommerce Frontend Developer</span>
+            </p>
+
+            <h2 className="text-2xl font-heading font-bold flex items-center">
+              <FaSuitcase className="mr-2 text-secondaryAccent"/>
+              Notable Projects by Technology
+            </h2>
+
+            {/* Projects */}
+            {Object.keys(projects).map((tech, index) => (
+                <div key={index} className="mt-8">
+                  <h3 className="text-xl font-heading font-bold text-accent">
+                    {tech} Projects
+                  </h3>
+                  <div className="flex flex-wrap gap-4">
+                    {projects[tech].map((project, idx) => (
+                        <div
+                            key={idx}
+                            className="bg-background rounded-lg shadow-md p-6 w-full md:w-[48%]"
+                        >
+                          <h4 className="text-lg font-heading font-semibold">
+                            {project.name}
+                          </h4>
+                          <p className="text-sm mt-2 text-textSecondary">
+                            Duration: {project.duration}
+                          </p>
+                          <ul className="list-disc list-inside text-sm mt-2 text-textSecondary">
+                            {project.description.map((desc, i) => (
+                                <li key={i}>{desc}</li>
+                            ))}
+                          </ul>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+            ))}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
   );
 }
