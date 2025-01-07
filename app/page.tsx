@@ -1,3 +1,9 @@
+"use client";
+
+import React, { useRef } from "react";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+
 import {
   FaLaptopCode,
   FaSuitcase,
@@ -10,68 +16,8 @@ import { AiFillSafetyCertificate } from "react-icons/ai";
 import { MdEmail, MdOutlinePhoneAndroid, MdLanguage } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { GrProjects } from "react-icons/gr";
-import resumeData from "@/constants"; // Assuming the file is stored as resumeData.js
-
-interface PersonalInfo {
-  fullName: string;
-  jobTitle: string;
-  email: string;
-  phone: string;
-  location: string;
-  linkedin: string;
-}
-
-interface Achievement {
-  title: string;
-  details: string;
-}
-
-interface Experience {
-  title: string;
-  company?: string;
-  duration: string;
-  location?: string;
-  description: string[];
-}
-
-interface ProjectItem {
-  name: string;
-  link: string;
-  description: string[];
-}
-
-interface ProjectCategory {
-  category: string;
-  items: ProjectItem[];
-}
-
-interface Education {
-  degree: string;
-  school: string;
-  duration: string;
-}
-
-interface Language {
-  name: string;
-  level: string;
-}
-
-interface CertificationItem {
-  title: string;
-  description: string;
-}
-
-interface ResumeData {
-  personalInfo: PersonalInfo;
-  summary: string[];
-  keyAchievements: Achievement[];
-  experience: Experience[];
-  projects: ProjectCategory[];
-  education: Education[];
-  certifications: CertificationItem[];
-  skills: string[];
-  languages: Language[];
-}
+import { ResumeData } from "@/interfaces";
+import resumeData from "@/constants";
 
 export default function Resume() {
   const {
@@ -86,67 +32,111 @@ export default function Resume() {
     languages,
   }: ResumeData = resumeData;
 
+  const pdfRef = useRef<HTMLDivElement>(null);
+
+  const generatePDF = async () => {
+    if (!pdfRef.current) return;
+
+    const element = pdfRef.current;
+    const canvas = await html2canvas(element, { scale: 2 });
+
+    const imageData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const contentWidth = canvas.width;
+    const contentHeight = canvas.height;
+    const ratio = pageWidth / contentWidth;
+
+    const scaledWidth = pageWidth;
+    const scaledHeight = contentHeight * ratio;
+
+    let yOffset = 0;
+
+    while (yOffset < scaledHeight) {
+      pdf.addImage(
+          imageData,
+          "PNG",
+          0,
+          -yOffset / ratio,
+          scaledWidth,
+          scaledHeight
+      );
+
+      if (yOffset + pageHeight < scaledHeight) {
+        pdf.addPage();
+      }
+
+      yOffset += pageHeight;
+    }
+
+    pdf.save("resume.pdf");
+  };
+
+
   return (
-      <div className="min-h-screen bg-gray-100 text-gray-900 p-8">
-        <div className="bg-white border shadow-lg p-8 rounded-xl mb-6 flex items-center justify-between">
-          {/* Header */}
-          <div>
-            <div className="flex items-center gap-4 text-4xl mb-4">
-              <h1 className="text-5xl font-bold">{personalInfo.fullName}</h1>
-            </div>
-            <p className="text-2xl mb-8">{personalInfo.jobTitle}</p>
+      <div className="min-h-screen bg-gray-100 text-gray-900 p-4 md:p-8" ref={pdfRef}>
+        <div className="max-w-7xl w-full mx-auto">
+          <div className="bg-white border shadow-lg p-4 md:p-6 rounded-xl mb-4 flex flex-col-reverse md:flex-row items-center justify-between ">
+            {/* Header */}
+            <div>
+              <div className="flex items-center gap-4 text-4xl mb-4 justify-center md:justify-start">
+                <h1 className="text-4xl md:text-5xl font-bold text-center md:text-left">{personalInfo.fullName}</h1>
+              </div>
+              <p className="text-xl md:text-2xl mb-8 flex justify-center md:justify-start">{personalInfo.jobTitle}</p>
 
-            {/* Personal Info */}
-            <ul className="flex gap-2 flex-wrap">
-              <li className="flex items-center gap-1">
-                <MdEmail className="text-blue-500"/> {personalInfo.email}
-              </li>
-              <li className="flex items-center gap-1">
-                <MdOutlinePhoneAndroid className="text-blue-500"/> {personalInfo.phone}
-              </li>
-              <li className="flex items-center gap-1">
-                <FaLocationDot className="text-blue-500"/> {personalInfo.location}
-              </li>
-              <li className="flex items-center gap-1">
-                <FaLinkedin className="text-blue-500"/>{" "}
-                <a
-                    href={personalInfo.linkedin}
-                    className="underline"
-                >
-                  {personalInfo.linkedin}
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <img src="photo.jpg" alt="photo" className="w-40 rounded-full"/>
-          </div>
-        </div>
-
-        <div className="max-w-[1440px] w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left Section */}
-          <div className="bg-white border shadow-lg p-8 rounded-xl">
-            {/* Summary */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                <FaBullseye className="mr-2 text-green-500"/>
-                Summary
-              </h2>
-              <ul className="list-none text-sm flex gap-2 flex-wrap">
-                {summary.map((item, index) => (
-                    <li key={index} className="p-2 bg-green-200 rounded-lg">{item}</li>
-                ))}
+              {/* Personal Info */}
+              <ul className="flex flex-col md:flex-row gap-2 flex-wrap justify-center md:justify-start">
+                <li className="flex items-center gap-1">
+                  <MdEmail className="text-blue-500 inline-block align-middle"/>
+                  <span className="align-middle">{personalInfo.email}</span>
+                </li>
+                <li className="flex items-center gap-1">
+                  <MdOutlinePhoneAndroid className="text-blue-500 align-middle"/>
+                  <span className="align-middle">{personalInfo.phone}</span>
+                </li>
+                <li className="flex items-center gap-1">
+                  <FaLocationDot className="text-blue-500"/>
+                  <span className="align-middle">{personalInfo.location}</span>
+                </li>
+                <li className="flex items-center gap-1">
+                  <FaLinkedin className="text-blue-500 align-middle"/>{" "}
+                  <a href={personalInfo.linkedin} className="underline align-middle">
+                    {personalInfo.linkedin}
+                  </a>
+                </li>
               </ul>
             </div>
+            <div className="mb-3 md:mb-0">
+              <img src="photo.jpg" alt="photo" className="w-40 rounded-full"/>
+            </div>
+          </div>
 
-            {/* Skills */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                <FaLaptopCode className="mr-2 text-blue-500"/>
-                Skills
-              </h2>
-              <ul className="list-none text-sm flex gap-2 flex-wrap">
-              {skills.map((skill, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Left Section */}
+            <div className="col-span-3 lg:col-span-1 bg-white border shadow-lg p-4 md:p-6 rounded-xl">
+              {/* Summary */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 flex items-center">
+                  <FaBullseye className="mr-2 text-green-500"/>
+                  Summary
+                </h2>
+                <ul className="list-none text-sm flex gap-2 flex-wrap">
+                  {summary.map((item, index) => (
+                      <li key={index} className="p-2 bg-green-200 rounded-lg">{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Skills */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 flex items-center">
+                  <FaLaptopCode className="mr-2 text-blue-500"/>
+                  Skills
+                </h2>
+                <ul className="list-none text-sm flex gap-2 flex-wrap">
+                  {skills.map((skill, index) => (
                       <li key={index} className="p-2 bg-blue-100 rounded-lg">{skill}</li>
                   ))}
                 </ul>
@@ -155,7 +145,7 @@ export default function Resume() {
               {/* Languages */}
               <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                  <MdLanguage className="mr-2 text-orange-500" />
+                  <MdLanguage className="mr-2 text-orange-500"/>
                   Languages
                 </h2>
                 <ul className="flex flex-col flex-wrap gap-4">
@@ -196,10 +186,18 @@ export default function Resume() {
                   ))}
                 </ul>
               </div>
+
+              {/* Download PDF Button */}
+              <button
+                  onClick={generatePDF}
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+              >
+                Download PDF
+              </button>
             </div>
 
             {/* Right Section */}
-            <div className="col-span-2 bg-white border shadow-lg p-8 rounded-xl">
+            <div className="col-span-3 lg:col-span-2 bg-white border shadow-lg p-4 md:p-6 rounded-xl">
               {/* Key Achievements */}
               <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 flex items-center">
@@ -249,7 +247,7 @@ export default function Resume() {
                       <h3 className="text-xl text-blue-500 italic mb-1">
                         {category.category}
                       </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {category.items.map((project, idx) => (
                             <div
                                 key={idx}
@@ -271,5 +269,6 @@ export default function Resume() {
             </div>
           </div>
         </div>
-        );
-        }
+      </div>
+  );
+}
